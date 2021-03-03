@@ -1,8 +1,10 @@
+// マルチシグ処理テスト用コード
+// コントラクトをインスタンス化する。
 var SimpleMultiSig = artifacts.require("./SimpleMultiSig.sol")
 var TestRegistry = artifacts.require("./TestRegistry.sol")
 var lightwallet = require('eth-lightwallet')
 const Promise = require('bluebird')
-
+// 各種定数をセット
 const web3SendTransaction = Promise.promisify(web3.eth.sendTransaction)
 const web3GetBalance = Promise.promisify(web3.eth.getBalance)
 
