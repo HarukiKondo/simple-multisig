@@ -65,10 +65,13 @@ contract SimpleMultiSig {
     bytes32 txInputHash = keccak256(abi.encode(TXTYPE_HASH, destination, value, keccak256(data), nonce, executor, gasLimit));
     // インプット用ハッシュを用いて、さらにハッシュを生成
     bytes32 totalHash = keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, txInputHash));
-
-    address lastAdd = address(0); // cannot have address(0) as an owner
+    // cannot have address(0) as an owner
+    address lastAdd = address(0);
+    // 閾値分までループ処理を行う。(署名の確認)
     for (uint i = 0; i < threshold; i++) {
+      // 楕円曲線署名から公開鍵に関連付けられたアドレスを取得する。(エラーなら0を返す。)
       address recovered = ecrecover(totalHash, sigV[i], sigR[i], sigS[i]);
+      // 取得したアドレスがコントラクト所有者のものであり、閾値を上回っていることチェックする。
       require(recovered > lastAdd && isOwner[recovered]);
       lastAdd = recovered;
     }
